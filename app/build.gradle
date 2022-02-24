@@ -1,7 +1,14 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
 }
+
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
     compileSdk 32
@@ -17,6 +24,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "GUARDIAN_API_KEY", apikeyProperties['GUARDIAN_API_KEY']
     }
 
     buildTypes {
@@ -48,6 +57,9 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':data')
+    implementation project(path: ':domain')
+    implementation project(path: ':usecases')
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -63,4 +75,52 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.navigation:navigation-compose:$compose_navigation"
+
+    // FlowLayout
+    implementation "com.google.accompanist:accompanist-flowlayout:$version_flowlayout"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$version_hilt"
+    kapt "com.google.dagger:hilt-android-compiler:$version_hilt"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+
+    // Coroutines Retrofit
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
+
+    // Moshi
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
+    // Allows to use by viewmodels()
+    implementation "androidx.fragment:fragment-ktx:$version_fragment_ktx"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment:$version_navigation"
+
+    // Compose LiveData
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    // Pager
+    implementation "com.google.accompanist:accompanist-pager:$version_pager"
+
+    // System UI Controller
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$version_systemuicontroller"
+
+    // Coil
+    implementation "io.coil-kt:coil-compose:$version_coil"
+
+    // Coil support for gifs
+    implementation "io.coil-kt:coil-gif:$version_coil"
+
+    // More Material Icons
+    implementation "androidx.compose.material:material-icons-extended:$version_material"
+
+    // Swiperefresh Accompanist
+    implementation "com.google.accompanist:accompanist-swiperefresh:$version_swiperefresh"
+
+    // Hilt with Compose Navigation
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 }
