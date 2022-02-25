@@ -85,7 +85,7 @@ fun Home(
                         selected = section == index,
                         onClick = {
                             exampleViewModel.updateSection(index)
-                            exampleViewModel.getItemsFromFlow(null, sectionFound.id, currentTag)
+                            exampleViewModel.getItemsFromFlow(query, sectionFound.id, currentTag)
                         }
                     )
                 }
