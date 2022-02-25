@@ -10,7 +10,7 @@ interface ApiService {
     @GET("{querypath}?show-fields=body,thumbnail,headline")
     fun getItem(@Path(value = "querypath", encoded = true) queryPath: String): Call<ApiResponse>
 
-    @GET("search?query-fields=thumbnail,headline&show-fields=thumbnail,headline")
+    @GET("search?query-fields=body,headline&show-fields=thumbnail,headline")
     fun getItems(@Query("q") query: String?,
                  @Query("section") section: String,
                  @Query("tag") tag: String?

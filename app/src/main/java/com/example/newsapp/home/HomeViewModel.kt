@@ -20,8 +20,8 @@ class HomeViewModel @Inject constructor(
 
     private var currentFlow = viewModelScope.launch { }
 
-    private val _query = MutableLiveData<String?>()
-    val query: LiveData<String?>
+    private val _query = MutableLiveData<String>("")
+    val query: LiveData<String>
         get() = _query
 
     private val _section = MutableLiveData(0)
@@ -53,6 +53,9 @@ class HomeViewModel @Inject constructor(
 
     fun updateQuery(newValue: String) {
         _query.value = newValue
+        _section.value?.let {
+            getItemsFromFlow(newValue, sections.elementAt(it).id, _currentTag.value)
+        }
     }
 
     fun updateSection(newValue: Int) {
@@ -68,7 +71,7 @@ class HomeViewModel @Inject constructor(
     fun getItemsFromFlow(query: String?, section: String, currentTag: String?) {
         currentFlow.cancel()
         currentFlow = viewModelScope.launch {
-            getItemsApi(query, section, currentTag).collect {
+            getItemsApi(if (query == "") null else "\"$query\"", section, currentTag).collect {
                 if (_items.value == null || _items.value?.size == 0 ||
                     _items.value != apiMapper.fromEntityList(it.items) ||
                     it.status != "initial"
