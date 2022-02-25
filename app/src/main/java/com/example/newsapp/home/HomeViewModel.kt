@@ -52,9 +52,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateQuery(newValue: String) {
-        _query.value = newValue
+        var noExtraLines = newValue.replace("\n", "")
+        _query.value = noExtraLines
         _section.value?.let {
-            getItemsFromFlow(newValue, sections.elementAt(it).id, _currentTag.value)
+            getItemsFromFlow(noExtraLines, sections.elementAt(it).id, _currentTag.value)
         }
     }
 

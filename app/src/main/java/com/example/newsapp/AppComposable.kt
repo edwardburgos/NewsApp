@@ -43,7 +43,8 @@ fun AppComposable() {
                         drawerState.close()
                         currentTag = id
                     }
-                }
+                },
+                currentTag
             )
         }
     ) {

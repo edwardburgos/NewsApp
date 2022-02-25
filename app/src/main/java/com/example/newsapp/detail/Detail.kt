@@ -51,7 +51,7 @@ fun Detail(
                         Icon(
                             Icons.Filled.ArrowBack,
                             contentDescription = "Go Back",
-                            tint = MaterialTheme.colors.secondary
+                            tint = MaterialTheme.colors.primary
                         )
                     }
                 },
