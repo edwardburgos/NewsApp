@@ -1,5 +1,6 @@
 package com.example.newsapp.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -37,7 +38,8 @@ fun Home(
     openDrawer: () -> Job,
     currentTag: String?,
     keyboardController: SoftwareKeyboardController?,
-    focusManager: FocusManager
+    focusManager: FocusManager,
+    configuration: Configuration
 ) {
     val selectedItem by exampleViewModel.navigateToSelectedItem.observeAsState()
     val section by exampleViewModel.section.observeAsState(0)
@@ -134,7 +136,8 @@ fun Home(
                 { id -> navController.navigate("detail/${id.replace("/", "*>")}") },
                 items,
                 keyboardController,
-                focusManager
+                focusManager,
+                configuration
             )
         }
     }

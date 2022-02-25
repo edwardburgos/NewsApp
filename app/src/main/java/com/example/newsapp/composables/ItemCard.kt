@@ -1,5 +1,6 @@
 package com.example.newsapp.composables
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -26,7 +27,8 @@ fun ItemCard(
     item: Content,
     index: Int,
     keyboardController: SoftwareKeyboardController?,
-    focusManager: FocusManager
+    focusManager: FocusManager,
+    configuration: Configuration
 ) {
     Card(
         modifier = Modifier
@@ -45,10 +47,10 @@ fun ItemCard(
                     onTap = {
                         navigate(item.id)
                         keyboardController?.hide()
-                        focusManager
+                        focusManager.clearFocus()
                     })
             }
-            .fillMaxWidth(),
+            .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f),
         elevation = 4.dp
     ) {
         Column(

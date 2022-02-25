@@ -1,5 +1,6 @@
 package com.example.newsapp.detail
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -31,7 +33,8 @@ import org.jsoup.select.Elements
 fun Detail(
     navController: NavController,
     itemId: String?,
-    viewModel: DetailViewModel
+    viewModel: DetailViewModel,
+    configuration: Configuration
 ) {
     val item by viewModel.item.observeAsState()
 
@@ -65,14 +68,15 @@ fun Detail(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 it.fields.thumbnail?.let { it1 ->
                     Image(
                         painter = rememberImagePainter(data = it1),
                         contentDescription = null,
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
                             .aspectRatio(2f)
                             .padding(bottom = 10.dp)
                             .clip(RoundedCornerShape(8.dp)),
@@ -82,12 +86,14 @@ fun Detail(
                 Text(
                     text = it.fields.headline,
                     style = MaterialTheme.typography.h4,
-                    modifier = Modifier.padding(bottom = 5.dp)
+                    modifier = Modifier.padding(bottom = 5.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+
                 )
                 Text(
                     text = "Published in ${it.webPublicationDate.substringBefore("T")}",
                     style = MaterialTheme.typography.body2,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+
                 )
                 it.fields.body?.let { it2 ->
                     //Text(it2)
@@ -143,18 +149,20 @@ fun Detail(
 
                                     },
                                     style = MaterialTheme.typography.body1.plus(TextStyle(lineHeight = 20.sp)),
-                                    modifier = Modifier.padding(bottom = 5.dp)
+                                    modifier = Modifier.padding(bottom = 5.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+
                                 )
                             }
                             "h2" -> Text(
                                 text = e.text(),
                                 style = MaterialTheme.typography.h5,
-                                modifier = Modifier.padding(bottom = 5.dp)
+                                modifier = Modifier.padding(bottom = 5.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+
                             )
                             "h3" -> Text(
                                 text = e.text(),
                                 style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(bottom = 5.dp)
+                                modifier = Modifier.padding(bottom = 5.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
                             )
                         }
                     }
