@@ -1,5 +1,6 @@
 package com.example.newsapp.home
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,19 +10,26 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.newsapp.composables.ItemCards
 import com.example.newsapp.sections
 import kotlinx.coroutines.Job
 
+@ExperimentalComposeUiApi
 @Composable
 fun Home(
     navController: NavController,
     exampleViewModel: HomeViewModel,
     openDrawer: () -> Job,
-    currentTag: String?
+    currentTag: String?,
+    keyboardController: SoftwareKeyboardController?,
+    focusManager: FocusManager
 ) {
     val selectedItem by exampleViewModel.navigateToSelectedItem.observeAsState()
     val section by exampleViewModel.section.observeAsState(0)
@@ -41,12 +49,21 @@ fun Home(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-            ,
+                .pointerInput(Unit) {
+                    detectTapGestures(onPress = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                    })
+                },
             color = MaterialTheme.colors.primary,
             elevation = 8.dp,
         ){
             Row(modifier = Modifier.fillMaxWidth()){
-                IconButton(onClick = { openDrawer() }) {
+                IconButton(onClick = {
+                    openDrawer()
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                }) {
                         Icon(
                             Icons.Filled.Menu,
                             contentDescription = "Menu",
@@ -75,7 +92,9 @@ fun Home(
             }
             ItemCards(
                 { id -> navController.navigate("detail/${id.replace("/", "*>")}") },
-                items
+                items,
+                keyboardController,
+                focusManager
             )
         }
     }
