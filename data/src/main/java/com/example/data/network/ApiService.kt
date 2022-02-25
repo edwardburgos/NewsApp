@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface ApiService {
     @GET("{querypath}?show-fields=body,thumbnail,headline")
-    fun getItem(@Path("querypath") queryPath: String): Call<ApiResponse>
+    fun getItem(@Path(value = "querypath", encoded = true) queryPath: String): Call<ApiResponse>
 
     @GET("search?query-fields=thumbnail,headline&show-fields=thumbnail,headline")
     fun getItems(@Query("q") query: String?,

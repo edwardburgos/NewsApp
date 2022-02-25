@@ -71,7 +71,7 @@ fun Home(
                 }
             }
             ItemCards(
-                { id -> exampleViewModel.displayItemDetails(id) },
+                { id -> navController.navigate("detail/${id.replace("/", "*>")}") },
                 items
             )
         }

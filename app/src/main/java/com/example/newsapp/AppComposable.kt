@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.detail.Detail
+import com.example.newsapp.detail.DetailViewModel
 import com.example.newsapp.home.Drawer
 import com.example.newsapp.home.Home
 import com.example.newsapp.home.HomeViewModel
@@ -46,9 +47,12 @@ fun AppComposable() {
                 Home(navController, homeviewModel, openDrawer, currentTag)
             }
             composable("detail/{itemId}") { backStackEntry ->
+                val detailviewModel = hiltViewModel<DetailViewModel>()
                 Detail(
                     navController,
-                    backStackEntry.arguments?.getString("itemId")?.let { it } ?: run { "" })
+                    backStackEntry.arguments?.getString("itemId"),
+                    detailviewModel
+                )
             }
         }
     }

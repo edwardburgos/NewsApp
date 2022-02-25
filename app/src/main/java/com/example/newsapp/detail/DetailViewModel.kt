@@ -27,10 +27,6 @@ class DetailViewModel @Inject constructor(
 
     private var currentFlow = viewModelScope.launch { }
 
-    init {
-        getItemFromFlow("")
-    }
-
     fun getItemFromFlow(id: String) {
         currentFlow.cancel()
         currentFlow = viewModelScope.launch {
