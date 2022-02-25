@@ -1,5 +1,6 @@
 package com.example.newsapp.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -25,21 +26,32 @@ val tags = listOf(
 fun Drawer(
     onDestinationClicked: (id: String?) -> Unit,
     currentTag: String?
-    ) {
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(MaterialTheme.colors.background)
     ) {
         tags.forEachIndexed { index, tag ->
-            Text(
-                text = tag.name,
+            Row(
                 modifier = Modifier
                     .clickable { onDestinationClicked(tag.id) }
-                    .padding(bottom = 16.dp),
-                color = if (currentTag != tag.id) Color.Gray else MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h5.plus(TextStyle(fontWeight = FontWeight.SemiBold))
-            )
+                    .fillMaxWidth(),
+            ) {
+                Text(
+                    text = tag.name,
+                    modifier = Modifier
+                        .clickable { onDestinationClicked(tag.id) }
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp,
+                            top = if (index == 0) 16.dp else 0.dp
+                        ),
+                    color = if (currentTag != tag.id) Color.Gray else MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h5.plus(TextStyle(fontWeight = FontWeight.SemiBold))
+                )
+            }
         }
     }
 }

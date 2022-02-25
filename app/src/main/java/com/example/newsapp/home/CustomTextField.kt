@@ -9,6 +9,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -20,7 +22,7 @@ fun CustomTextField(
     leadingIcon: (@Composable() () -> Unit)? = null,
     trailingIcon: (@Composable() () -> Unit)? = null,
     value: String,
-    onValueChange: (query: String) -> Unit,
+    onValueChange: (query: String) -> Unit
 ) {
     Row(modifier = modifier,
         verticalAlignment = Alignment.CenterVertically) {
@@ -29,19 +31,19 @@ fun CustomTextField(
         }
         Surface(
             modifier = Modifier.weight(1f)
-                .padding(start = paddingLeadingIconEnd)
+                .padding(start = paddingLeadingIconEnd, end = paddingTrailingIconStart)
         ) {
             BasicTextField(
                 value = value,
                 onValueChange = { onValueChange(it) },
                 maxLines = 1,
                 singleLine = true,
-                textStyle = MaterialTheme.typography.body1
+                textStyle = MaterialTheme.typography.body1.plus(TextStyle(color = MaterialTheme.colors.primary))
             )
             if (value == "") {
                 Text(
                     text = "Search",
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1.plus(TextStyle(color = Color.Gray))
                 )
             }
         }
