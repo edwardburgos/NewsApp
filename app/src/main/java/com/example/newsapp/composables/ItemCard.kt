@@ -23,8 +23,13 @@ fun ItemCard(
 ) {
     Card(
         modifier = Modifier
-            .padding(start = 16.dp, top = if (index == 0) 16.dp else 0.dp, end = 16.dp, bottom = 16.dp)
             .clickable(onClick = { navigate(item.id) })
+            .padding(
+                start = 16.dp,
+                top = if (index == 0) 16.dp else 0.dp,
+                end = 16.dp,
+                bottom = 16.dp
+            )
             .fillMaxWidth(),
         elevation = 4.dp
     ) {
@@ -48,7 +53,10 @@ fun ItemCard(
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.padding(bottom = 5.dp)
             )
-            Text(text = "Published in ${item.webPublicationDate.substringBefore("T")}")
+            Text(
+                text = "Published in ${item.webPublicationDate.substringBefore("T")}",
+                style = MaterialTheme.typography.body2
+            )
         }
 
     }
