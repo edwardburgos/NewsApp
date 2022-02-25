@@ -17,6 +17,8 @@ buildscript {
         version_flowlayout = "0.23.0"
         version_material = "1.1.0"
         version_swiperefresh = "0.23.0"
+        version_jsoup = "1.11.2"
+        version_navigation_hilt_compose = "1.0.0"
     }
     repositories {
         google()

@@ -122,8 +122,14 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$version_swiperefresh"
 
     // Hilt with Compose Navigation
-    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    implementation "androidx.hilt:hilt-navigation-compose:$version_navigation_hilt_compose"
 
     // Jsoup
-    implementation "org.jsoup:jsoup:1.11.2"
+    implementation "org.jsoup:jsoup:$version_jsoup"
+
+    // System UI Controller
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$version_systemuicontroller"
+
+    // More Material Icons
+    implementation "androidx.compose.material:material-icons-extended:$version_material"
 }
