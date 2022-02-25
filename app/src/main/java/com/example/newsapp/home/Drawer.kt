@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.example.domain.TagPair
 
 val tags = listOf(
+    TagPair(null, "Clean filter"),
     TagPair("business/cost-of-living-crisis", "Cost of living crisis"),
     TagPair("business/chinese-economy", "Chinese economy"),
     TagPair("music/kanyewest", "Kanye West"),
@@ -18,7 +19,7 @@ val tags = listOf(
 
 @Composable
 fun Drawer(
-    onDestinationClicked: (id: String) -> Unit
+    onDestinationClicked: (id: String?) -> Unit
     ) {
     Column(
         modifier = Modifier
