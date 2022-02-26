@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.example.data.repository.model.GetItemResponse
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
@@ -69,14 +70,16 @@ fun Detail(
             ) {
                 it.fields.thumbnail?.let { it1 ->
                     Image(
-                        painter = rememberImagePainter(data = it1),
+                        painter = rememberImagePainter(data = it1,
+                            builder = {
+                                size(OriginalSize)
+                            }),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
-                            .aspectRatio(2f)
                             .padding(bottom = 10.dp)
                             .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.FillWidth
                     )
                 }
                 Text(
@@ -154,6 +157,18 @@ fun Detail(
 
                                 )
                             }
+                            "img" -> Image(
+                                painter = rememberImagePainter(data = e.attr("src"),
+                                    builder = {
+                                        size(OriginalSize)
+                                    }),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 5.dp, bottom = 10.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
+                                contentScale = ContentScale.FillWidth
+                            )
                             "h2" -> Text(
                                 text = e.text(),
                                 style = MaterialTheme.typography.h5,

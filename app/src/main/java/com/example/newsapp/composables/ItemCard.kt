@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.example.domain.Content
 
 @ExperimentalComposeUiApi
@@ -58,14 +59,16 @@ fun ItemCard(
         ) {
             item.fields.thumbnail?.let {
                 Image(
-                    painter = rememberImagePainter(data = it),
+                    painter = rememberImagePainter(data = it,
+                            builder = {
+                            size(OriginalSize)
+                        }),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(2f)
                         .padding(bottom = 10.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.FillWidth
                 )
             }
             Text(
