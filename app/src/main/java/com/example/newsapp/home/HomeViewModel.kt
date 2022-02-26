@@ -5,20 +5,20 @@ import androidx.lifecycle.ViewModel
 import com.example.data.network.model.ContentApiMapper
 import com.example.data.repository.model.GetItemsResponse
 import com.example.newsapp.sections
-import com.example.usecases.GetItemsUseCaseImpl
+import com.example.usecases.GetItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getItemsApi: GetItemsUseCaseImpl,
+    private val getItemsApi: GetItemsUseCase,
     val apiMapper: ContentApiMapper
 ) : ViewModel() {
 
     var query = mutableStateOf("")
     var section = mutableStateOf(0)
-    var tag = mutableStateOf<String?>("")
+    var tag = mutableStateOf<String?>(null)
 
     var getItems = updateGetItemsValue()
 
