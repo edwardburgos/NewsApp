@@ -164,7 +164,7 @@ fun Detail(
                                     }),
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
                                     .padding(top = 5.dp, bottom = 10.dp)
                                     .clip(RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.FillWidth
