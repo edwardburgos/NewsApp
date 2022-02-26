@@ -8,11 +8,11 @@ import retrofit2.http.Query
 
 interface ApiService {
     @GET("{querypath}?show-fields=body,thumbnail,headline")
-    fun getItem(@Path(value = "querypath", encoded = true) queryPath: String): Call<ApiResponse>
+    suspend fun getItem(@Path(value = "querypath", encoded = true) queryPath: String): ApiResponse
 
     @GET("search?query-fields=body,headline&show-fields=thumbnail,headline")
-    fun getItems(@Query("q") query: String?,
+    suspend fun getItems(@Query("q") query: String?,
                  @Query("section") section: String,
                  @Query("tag") tag: String?
-    ): Call<ApiResponse>
+    ): ApiResponse
 }

@@ -24,21 +24,17 @@ class ItemRepositoryImpl @Inject constructor(
 
     override fun getItem(queryPath: String): Flow<GetItemResponse> {
         return flow {
-            val source = apiService.getItem(queryPath)
             var finalResponse = GetItemResponse("initial", null)
-            source.enqueue(object : Callback<ApiResponse> {
-                override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-                    if (response.isSuccessful) {
-                        response.body()?.let {
-                            finalResponse = GetItemResponse("successful", it.response.content)
-                        }
-                    }
+            try {
+                var result = apiService.getItem(queryPath)
+                result.response.content?.let {
+                    finalResponse = GetItemResponse("successful", it)
                 }
-                override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                    Log.e("Failure", "Message " + t.message)
-                    finalResponse = GetItemResponse(if (t.message == "Unable to resolve host \"content.guardianapis.com\": No address associated with hostname") "no internet" else "error", null)
+            } catch (e: Exception) {
+                e.message?.let {
+                    finalResponse = GetItemResponse(if (it.contains("Unable to resolve host \"content.guardianapis.com\": No address associated with hostname")) "no internet" else "error", null)
                 }
-            })
+            }
             while (true) {
                 emit(finalResponse)
                 if (finalResponse.status == "initial") {
@@ -52,23 +48,17 @@ class ItemRepositoryImpl @Inject constructor(
 
     override fun getItems(query: String?, section: String, tag: String?): Flow<GetItemsResponse> {
         return flow {
-            val source = apiService.getItems(query, section, tag)
             var finalResponse = GetItemsResponse("initial", listOf())
-            source.enqueue(object : Callback<ApiResponse> {
-                override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-                    if (response.isSuccessful) {
-                        response.body()?.let {
-                            it.response.results?.let { it1 ->
-                                finalResponse = GetItemsResponse(if (it1.isEmpty()) "empty" else "filled", it1)
-                            }
-                        }
-                    }
+            try {
+                var result = apiService.getItems(query, section, tag)
+                result.response.results?.let {
+                    finalResponse = GetItemsResponse(if (it.isEmpty()) "empty" else "filled", it)
                 }
-                override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                    Log.e("Failure", "Message " + t.message)
-                    finalResponse = GetItemsResponse(if (t.message == "Unable to resolve host \"content.guardianapis.com\": No address associated with hostname") "no internet" else "error", listOf())
+            } catch (e: Exception) {
+                e.message?.let {
+                    finalResponse = GetItemsResponse(if (it.contains("Unable to resolve host \"content.guardianapis.com\": No address associated with hostname")) "no internet" else "error", listOf())
                 }
-            })
+            }
             while (true) {
                 emit(finalResponse)
                 if (finalResponse.status == "initial") {
