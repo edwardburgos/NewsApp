@@ -56,13 +56,17 @@ fun AppComposable() {
                 Home(navController, homeviewModel, openDrawer, currentTag, keyboardController, focusManager, configuration)
             }
             composable("detail/{itemId}") { backStackEntry ->
-                val detailviewModel = hiltViewModel<DetailViewModel>()
-                Detail(
-                    navController,
-                    backStackEntry.arguments?.getString("itemId"),
-                    detailviewModel,
-                    configuration
-                )
+                backStackEntry.arguments?.let {
+                    it.getString("itemId")?.let { it1 ->
+                        val detailviewModel = hiltViewModel<DetailViewModel>()
+                        Detail(
+                            navController,
+                            it1,
+                            detailviewModel,
+                            configuration
+                        )
+                    }
+                }
             }
         }
     }

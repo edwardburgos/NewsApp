@@ -5,9 +5,11 @@ import com.example.data.network.ApiService
 import com.example.data.network.model.ApiResponse
 import com.example.data.repository.model.GetItemResponse
 import com.example.data.repository.model.GetItemsResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,7 +47,7 @@ class ItemRepositoryImpl @Inject constructor(
                     delay(refreshIntervalMsLong)
                 }
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     override fun getItems(query: String?, section: String, tag: String?): Flow<GetItemsResponse> {
@@ -75,6 +77,6 @@ class ItemRepositoryImpl @Inject constructor(
                     delay(refreshIntervalMsLong)
                 }
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 }

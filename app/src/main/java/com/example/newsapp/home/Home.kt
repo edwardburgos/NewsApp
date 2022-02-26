@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.HighlightOff
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -26,6 +25,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.data.repository.model.GetItemsResponse
 import com.example.newsapp.composables.ItemCards
 import com.example.newsapp.sections
 import kotlinx.coroutines.Job
@@ -41,19 +41,14 @@ fun Home(
     focusManager: FocusManager,
     configuration: Configuration
 ) {
-    val selectedItem by exampleViewModel.navigateToSelectedItem.observeAsState()
-    val section by exampleViewModel.section.observeAsState(0)
-    val items by exampleViewModel.items.observeAsState(listOf())
-    val query by exampleViewModel.query.observeAsState("")
 
-    if (exampleViewModel.currentTag.value != currentTag) exampleViewModel.updateCurrentTag(
-        currentTag
-    )
+    val query = exampleViewModel.query.value
+    val section = exampleViewModel.section.value
+    val tag = exampleViewModel.tag.value
 
-    if (null != selectedItem) {
-        navController.navigate("detail/${selectedItem}")
-        exampleViewModel.displayItemDetailsComplete()
-    }
+    val response by exampleViewModel.getItems.collectAsState(initial = GetItemsResponse("initial", listOf()))
+
+    if (tag != currentTag) exampleViewModel.setTag(currentTag)
 
     Column {
         Surface(
@@ -102,14 +97,14 @@ fun Home(
                         )
                     },
                     value = query,
-                    onValueChange = { exampleViewModel.updateQuery(it) },
+                    onValueChange = { exampleViewModel.setQuery(it) },
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.HighlightOff,
                             contentDescription = "Clean",
                             modifier = Modifier
                                 .padding(start = 0.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                                .clickable(enabled = true, onClick = { exampleViewModel.updateQuery("") })
+                                .clickable(enabled = true, onClick = { exampleViewModel.setQuery("") })
                         )
                     },
                     paddingTrailingIconStart = 16.dp
@@ -126,15 +121,14 @@ fun Home(
                         text = { Text(sectionFound.name) },
                         selected = section == index,
                         onClick = {
-                            exampleViewModel.updateSection(index)
-                            exampleViewModel.getItemsFromFlow(query, sectionFound.id, currentTag)
+                            exampleViewModel.setSection(index)
                         }
                     )
                 }
             }
             ItemCards(
                 { id -> navController.navigate("detail/${id.replace("/", "*>")}") },
-                items,
+                exampleViewModel.apiMapper.fromEntityList(response.items),
                 keyboardController,
                 focusManager,
                 configuration

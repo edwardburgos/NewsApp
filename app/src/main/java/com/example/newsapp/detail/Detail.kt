@@ -10,8 +10,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,24 +26,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.data.repository.model.GetItemResponse
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 
 @Composable
 fun Detail(
     navController: NavController,
-    itemId: String?,
+    itemId: String,
     viewModel: DetailViewModel,
     configuration: Configuration
 ) {
-    val item by viewModel.item.observeAsState()
+    viewModel.setItemId(itemId.replace("*>", "/"))
 
-    itemId?.let { it ->
-        var newId = it.replace("*>", "/")
-        if (item == null || item?.id != newId) {
-            viewModel.getItemFromFlow(newId)
-        }
-    }
+    val response by viewModel.getItem.collectAsState(initial = GetItemResponse("initial", null))
 
     Scaffold(
         topBar = {
@@ -63,7 +59,7 @@ fun Detail(
             )
         }
     ) {
-        item?.let {
+        response.item?.let {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -86,17 +82,20 @@ fun Detail(
                 Text(
                     text = it.fields.headline,
                     style = MaterialTheme.typography.h4,
-                    modifier = Modifier.padding(bottom = 5.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+                    modifier = Modifier
+                        .padding(bottom = 5.dp)
+                        .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
 
                 )
                 Text(
                     text = "Published in ${it.webPublicationDate.substringBefore("T")}",
                     style = MaterialTheme.typography.body2,
-                    modifier = Modifier.padding(bottom = 16.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
 
                 )
                 it.fields.body?.let { it2 ->
-                    //Text(it2)
                     var doc = Jsoup.parse(it2)
                     var divs = doc.select("div")
                     var elements: Elements
@@ -149,20 +148,26 @@ fun Detail(
 
                                     },
                                     style = MaterialTheme.typography.body1.plus(TextStyle(lineHeight = 20.sp)),
-                                    modifier = Modifier.padding(bottom = 5.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+                                    modifier = Modifier
+                                        .padding(bottom = 5.dp)
+                                        .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
 
                                 )
                             }
                             "h2" -> Text(
                                 text = e.text(),
                                 style = MaterialTheme.typography.h5,
-                                modifier = Modifier.padding(bottom = 5.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+                                modifier = Modifier
+                                    .padding(bottom = 5.dp)
+                                    .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
 
                             )
                             "h3" -> Text(
                                 text = e.text(),
                                 style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(bottom = 5.dp).fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
+                                modifier = Modifier
+                                    .padding(bottom = 5.dp)
+                                    .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.5f else 1f)
                             )
                         }
                     }
