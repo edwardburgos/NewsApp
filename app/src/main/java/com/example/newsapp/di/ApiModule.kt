@@ -33,8 +33,6 @@ class ApiModule {
             val httpUrl = original.url()
             val newHttpUrl =
                 httpUrl.newBuilder().addQueryParameter("api-key", BuildConfig.GUARDIAN_API_KEY).build()
-            println("WOW")
-            println(newHttpUrl)
             val requestBuilder = original.newBuilder().url(newHttpUrl)
             val request = requestBuilder.build()
             chain.proceed(request)
