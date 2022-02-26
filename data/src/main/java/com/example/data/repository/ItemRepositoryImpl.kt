@@ -25,17 +25,17 @@ class ItemRepositoryImpl @Inject constructor(
     override fun getItem(queryPath: String): Flow<GetItemResponse> {
         return flow {
             var finalResponse = GetItemResponse("initial", null)
-            try {
-                var result = apiService.getItem(queryPath)
-                result.response.content?.let {
-                    finalResponse = GetItemResponse("successful", it)
-                }
-            } catch (e: Exception) {
-                e.message?.let {
-                    finalResponse = GetItemResponse(if (it.contains("Unable to resolve host \"content.guardianapis.com\": No address associated with hostname")) "no internet" else "error", null)
-                }
-            }
             while (true) {
+                try {
+                    var result = apiService.getItem(queryPath)
+                    result.response.content?.let {
+                        finalResponse = GetItemResponse("successful", it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        finalResponse = GetItemResponse(if (it.contains("Unable to resolve host \"content.guardianapis.com\": No address associated with hostname")) "no internet" else "error", null)
+                    }
+                }
                 emit(finalResponse)
                 if (finalResponse.status == "initial") {
                     delay(refreshIntervalMsShort)
@@ -49,17 +49,17 @@ class ItemRepositoryImpl @Inject constructor(
     override fun getItems(query: String?, section: String, tag: String?): Flow<GetItemsResponse> {
         return flow {
             var finalResponse = GetItemsResponse("initial", listOf())
-            try {
-                var result = apiService.getItems(query, section, tag)
-                result.response.results?.let {
-                    finalResponse = GetItemsResponse(if (it.isEmpty()) "empty" else "filled", it)
-                }
-            } catch (e: Exception) {
-                e.message?.let {
-                    finalResponse = GetItemsResponse(if (it.contains("Unable to resolve host \"content.guardianapis.com\": No address associated with hostname")) "no internet" else "error", listOf())
-                }
-            }
             while (true) {
+                try {
+                    var result = apiService.getItems(query, section, tag)
+                    result.response.results?.let {
+                        finalResponse = GetItemsResponse(if (it.isEmpty()) "empty" else "filled", it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        finalResponse = GetItemsResponse(if (it.contains("Unable to resolve host \"content.guardianapis.com\": No address associated with hostname")) "no internet" else "error", listOf())
+                    }
+                }
                 emit(finalResponse)
                 if (finalResponse.status == "initial") {
                     delay(refreshIntervalMsShort)
